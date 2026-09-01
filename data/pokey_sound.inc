@@ -1,0 +1,60 @@
+/* Missile Command POKEY tables and output-level mapping. */
+/* MAME's current POKEY analog model represents each 4-bit channel DAC with
+ * 90k/26.5k/8.05k/3.4k switched resistors and an 8 Mohm off resistance.
+ * These amplitudes are the single-active-channel excursions from the all-off
+ * level, normalized to a 30-count maximum. This retains safe four-channel PWM
+ * headroom (128 +/- 120) while reproducing the strongly
+ * nonlinear POKEY volume law much better than volume<<1. */
+static const u8 PROGMEM pokeyVolumeAmp[16]={
+    0,4,10,12,20,21,22,23,27,27,28,28,29,30,30,30
+};
+
+/* Original four-byte sound blocks: start, frame count, delta, repeat count.
+ * A two-byte X,0 terminates a register sequence. These bytes are a direct
+ * transcription of Missile Command's W3SOUN tables. */
+static const u8 PROGMEM snd_ex1[]={0xa0,0x10,0x04,0x10,0,0};
+static const u8 PROGMEM snd_ex2[]={0x86,0x40,0xfe,0x04,0,0};
+static const u8 PROGMEM snd_ex3[]={0xc0,0x10,0x04,0x10,0,0};
+static const u8 PROGMEM snd_ex4[]={0x86,0x40,0xfe,0x04,0,0};
+static const u8 PROGMEM snd_la5[]={
+    0x60,0x10,0x00,0x01, 0x50,0x10,0xf8,0x01,
+    0x48,0x10,0x18,0x01, 0x60,0x18,0xf0,0x01,
+    0x60,0x10,0xf8,0x01, 0x60,0x10,0x08,0x10, 0,0
+};
+static const u8 PROGMEM snd_la6[]={
+    0x82,0x20,0x02,0x01, 0x84,0x10,0x00,0x04,
+    0x84,0x38,0xff,0x04, 0,0
+};
+static const u8 PROGMEM snd_tk1[]={0x10,0x04,0x00,0x01,0,0};
+static const u8 PROGMEM snd_tk2[]={0x2f,0x04,0x0f,0x01,0,0};
+static const u8 PROGMEM snd_bn1[]={0x18,0x18,0x00,0x18,0,0};
+static const u8 PROGMEM snd_bn2[]={0xa4,0x18,0x00,0x18,0xa0,0x10,0x00,0x02,0,0};
+static const u8 PROGMEM snd_wp1[]={
+    0x10,0x02,0x01,0x20, 0x10,0x02,0x01,0x20,
+    0x10,0x02,0x01,0x20, 0x10,0x02,0x01,0x20,
+    0x10,0x02,0x01,0x20, 0x10,0x02,0x01,0x20, 0,0
+};
+static const u8 PROGMEM snd_wp2[]={0xa4,0x02,0x00,0xc0,0,0};
+static const u8 PROGMEM snd_lo7[]={0x20,0x80,0x00,0x03,0,0};
+static const u8 PROGMEM snd_lo8[]={
+    0xa3,0x40,0xfd,0x02, 0xa3,0x40,0xfd,0x02,
+    0xa3,0x40,0xfd,0x02, 0,0
+};
+static const u8 PROGMEM snd_xx1[]={0x40,0xff,0x02,0x08,0,0};
+static const u8 PROGMEM snd_xx2[]={0x88,0xff,0xff,0x08,0,0};
+static const u8 PROGMEM snd_xx3[]={0xc0,0xff,0x02,0x08,0,0};
+static const u8 PROGMEM snd_xx4[]={0x88,0xff,0xff,0x08,0,0};
+static const u8 PROGMEM snd_ns7[]={0x18,0x02,0xff,0x10,0x08,0x20,0x00,0x01,0,0};
+static const u8 PROGMEM snd_ns8[]={0xa4,0x10,0xff,0x04,0,0};
+
+/* Register order is AUDF1,AUDC1,...AUDF4,AUDC4. */
+static const u8 * const PROGMEM soundMap[8][8]={
+    {0,0,0,0,0,0,snd_lo7,snd_lo8},
+    {snd_ex1,snd_ex2,snd_ex3,snd_ex4,0,0,0,0},
+    {0,0,0,0,snd_la5,snd_la6,0,0},
+    {snd_tk1,snd_tk2,0,0,0,0,0,0},
+    {snd_wp1,snd_wp2,0,0,0,0,0,0},
+    {snd_xx1,snd_xx2,snd_xx3,snd_xx4,0,0,0,0},
+    {snd_bn1,snd_bn2,0,0,0,0,0,0},
+    {0,0,0,0,0,0,snd_ns7,snd_ns8}
+};
